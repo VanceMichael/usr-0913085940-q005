@@ -1,17 +1,13 @@
 package main
 
 import (
-    "encoding/json"
     "log"
-    "net/http"
+    "github.com/gin-gonic/gin"
 )
 
 func main() {
-    mux := http.NewServeMux()
-    mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-        w.Header().Set("Content-Type", "application/json")
-        _ = json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
-    })
+    mux := gin.New()
+    mux.GET("/health", func(c *gin.Context) { c.JSON(200, gin.H{"status": "ok"}) })
     log.Println("服务监听 0.0.0.0:8080")
-    log.Fatal(http.ListenAndServe(":8080", mux))
+    log.Fatal(mux.Run(":8080"))
 }
